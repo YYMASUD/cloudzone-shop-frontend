@@ -23,7 +23,10 @@ export default function AdminDashboardPage() {
 
   if (status === "anonymous") {
     return (
-      <Notice title="Sign in required" message="Sign in with an administrator account to access the dashboard.">
+      <Notice
+        title="Sign in required"
+        message="Sign in with an administrator account to access the dashboard."
+      >
         <Link className="text-primary font-medium hover:underline" href="/login?next=/admin">
           Go to sign in
         </Link>
@@ -32,7 +35,9 @@ export default function AdminDashboardPage() {
   }
 
   if (user?.role !== "ADMIN") {
-    return <Notice title="Access denied" message="This area is only available to administrators." />;
+    return (
+      <Notice title="Access denied" message="This area is only available to administrators." />
+    );
   }
 
   if (isLoading) return <PageLoader />;
@@ -49,10 +54,30 @@ export default function AdminDashboardPage() {
 
   const orderCount = Object.values(data.orders).reduce((sum, count) => sum + count, 0);
   const metrics = [
-    { label: "Total users", value: data.users.total.toLocaleString(), detail: `${data.users.enabled.toLocaleString()} enabled`, icon: Users },
-    { label: "Customers", value: data.users.customers.toLocaleString(), detail: `${data.users.admins.toLocaleString()} administrators`, icon: Users },
-    { label: "Orders", value: orderCount.toLocaleString(), detail: "Across all statuses", icon: ShoppingBag },
-    { label: "Revenue", value: formatMoney(data.revenue, data.revenueCurrency), detail: "Recorded to date", icon: DollarSign },
+    {
+      label: "Total users",
+      value: data.users.total.toLocaleString(),
+      detail: `${data.users.enabled.toLocaleString()} enabled`,
+      icon: Users,
+    },
+    {
+      label: "Customers",
+      value: data.users.customers.toLocaleString(),
+      detail: `${data.users.admins.toLocaleString()} administrators`,
+      icon: Users,
+    },
+    {
+      label: "Orders",
+      value: orderCount.toLocaleString(),
+      detail: "Across all statuses",
+      icon: ShoppingBag,
+    },
+    {
+      label: "Revenue",
+      value: formatMoney(data.revenue, data.revenueCurrency),
+      detail: "Recorded to date",
+      icon: DollarSign,
+    },
   ];
 
   return (
@@ -88,25 +113,43 @@ export default function AdminDashboardPage() {
             <p className="text-muted-foreground text-sm">No order activity yet.</p>
           ) : (
             <ul className="divide-border divide-y">
-              {Object.entries(data.orders).sort(([a], [b]) => a.localeCompare(b)).map(([statusName, count]) => (
-                <li key={statusName} className="flex items-center justify-between gap-4 py-3 text-sm">
-                  <span className="font-medium">{statusName.replaceAll("_", " ")}</span>
-                  <span className="text-muted-foreground tabular-nums">{count.toLocaleString()}</span>
-                </li>
-              ))}
+              {Object.entries(data.orders)
+                .sort(([a], [b]) => a.localeCompare(b))
+                .map(([statusName, count]) => (
+                  <li
+                    key={statusName}
+                    className="flex items-center justify-between gap-4 py-3 text-sm"
+                  >
+                    <span className="font-medium">{statusName.replaceAll("_", " ")}</span>
+                    <span className="text-muted-foreground tabular-nums">
+                      {count.toLocaleString()}
+                    </span>
+                  </li>
+                ))}
             </ul>
           )}
         </CardContent>
       </Card>
 
-      <Link href="/orders" className="text-primary inline-flex w-fit items-center gap-2 text-sm font-medium hover:underline">
+      <Link
+        href="/orders"
+        className="text-primary inline-flex w-fit items-center gap-2 text-sm font-medium hover:underline"
+      >
         View customer orders <ArrowRight className="h-4 w-4" aria-hidden />
       </Link>
     </div>
   );
 }
 
-function Notice({ title, message, children }: { title: string; message: string; children?: React.ReactNode }) {
+function Notice({
+  title,
+  message,
+  children,
+}: {
+  title: string;
+  message: string;
+  children?: React.ReactNode;
+}) {
   return (
     <div className="border-border grid place-items-center gap-3 rounded-xl border border-dashed px-6 py-20 text-center">
       <CircleAlert className="text-muted-foreground h-8 w-8" aria-hidden />
